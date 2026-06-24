@@ -103,7 +103,7 @@ const deleteOrder = (orderId) => {
   }
 };
 
-const clearLogs = () => {
+const clearActivityLog = () => {
   if (
     window.confirm(
       "Clear all activity logs?"
@@ -113,6 +113,17 @@ const clearLogs = () => {
     localStorage.removeItem(
       "messages"
     );
+  }
+};
+
+const resetApplication = () => {
+  if (
+    window.confirm(
+      "This will delete all orders and activity logs. Continue?"
+    )
+  ) {
+    localStorage.clear();
+    window.location.reload();
   }
 };
 const exportOrders = () => {
@@ -284,9 +295,15 @@ const exportOrders = () => {
         markAsPaid={markAsPaid}
         deleteOrder={deleteOrder}
       />
-      <button onClick={clearLogs}>
-        Clear Activity Log
-      </button>
+      <div className="activity-buttons">
+        <button onClick={clearActivityLog}>
+          Clear Activity Log
+        </button>
+
+        <button onClick={resetApplication}>
+          Reset Application
+        </button>
+</div>
 
       <OutputPanel messages={messages} />
     </div>

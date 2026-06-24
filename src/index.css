@@ -155,3 +155,10 @@ button:hover {
 .distance-input {
   margin-left: 5px;
 }
+
+.activity-buttons {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
