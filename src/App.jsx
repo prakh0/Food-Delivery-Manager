@@ -126,7 +126,7 @@ const resetApplication = () => {
     window.location.reload();
   }
 };
-const exportOrders = () => {
+const downloadJson   = () => {
   const blob = new Blob(
     [JSON.stringify(orders, null, 2)],
     {
@@ -285,8 +285,8 @@ const exportOrders = () => {
           Assign Delivery
         </button>
   
-        <button onClick={exportOrders}>
-        Export Orders
+        <button onClick={downloadJson}>
+          Download Json   
         </button>
       </div>
  
