@@ -158,7 +158,7 @@ button:hover {
 
 .activity-buttons {
   display: flex;
-  gap: 12px;
+  gap: 4px;
   margin-bottom: 10px;
   flex-wrap: wrap;
 }
