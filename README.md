@@ -605,25 +605,3 @@ Preview production build:
 npm run preview
 ```
 
----
-
-# Future Improvements
-
-Possible future enhancements include:
-
-* Backend API integration
-* Database persistence
-* User authentication
-* Delivery agent management
-* Search functionality
-* Real-time updates
-* Order editing and deletion
-* Analytics dashboard
-
----
-
-# Author
-
-**Prakhar Pandey**
-
-```
