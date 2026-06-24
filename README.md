@@ -1,58 +1,158 @@
-# Food Delivery Manager
+# [Food Delivery Manager](https://github.com/YOUR_GITHUB_USERNAME/food-delivery-app)
 
-## Overview
+[Live Demo](https://food-delivery-manager.vercel.app/) | [Source Code](https://github.com/YOUR_GITHUB_USERNAME/food-delivery-app)
 
-Food Delivery Manager is a React-based web application that manages food delivery orders and automates delivery assignment based on distance and payment status.
+---
+
+# Overview
+
+Food Delivery Manager is a React-based web application that manages food delivery orders and automates delivery assignment based on business rules.
 
 The application allows users to:
 
-* Create new food delivery orders
+* Create food delivery orders
 * View all orders
 * Filter orders by status and distance
-* Automatically assign deliveries to the nearest eligible order
+* Automatically assign deliveries
 * Track delivery progress
-* Mark completed deliveries as paid
-* Maintain an activity log of all actions
-* Persist data across browser refreshes using Local Storage
+* Mark deliveries as paid
+* View activity history
+* Persist data across browser refreshes
 
-This project was developed as part of an assignment focused on filtering logic, prioritization algorithms, UI development, and state management.
+The project was built to demonstrate:
 
----
-
-## Problem Statement
-
-Food delivery companies receive multiple orders simultaneously. The system needs to determine:
-
-* Which orders are eligible for delivery
-* Which order should be assigned first
-* How delivery progress should be tracked
-* How users can easily manage and review order statuses
-
-The assignment specifically required assigning delivery to the nearest unpaid order while providing filtering and order management capabilities.
+* State management using React Hooks
+* Data validation
+* Filtering and sorting logic
+* Delivery prioritization algorithms
+* Component-based architecture
+* Browser storage persistence
 
 ---
 
-## Technology Stack
+# Assignment Requirements
 
-### Frontend
+The system was required to:
 
-* React
-* JavaScript (ES6+)
-* Vite
-* HTML5
-* CSS3
+### Create Orders
 
-### Storage
+Users should be able to add new food delivery orders.
 
-* Browser Local Storage
+### Manage Orders
 
-No backend was used because the assignment requirements can be fulfilled entirely on the client side.
+Orders should be displayed in a structured table.
+
+### Filter Orders
+
+Users should be able to filter orders based on:
+
+* Status
+* Distance
+
+### Assign Delivery
+
+The system should automatically assign delivery to the nearest unpaid order.
+
+### Track Delivery Progress
+
+The system should provide visibility into order status changes.
 
 ---
 
-## Application Architecture
+# Constraints Considered
 
-The application is divided into multiple reusable components:
+Several constraints were implemented to maintain data integrity.
+
+## Required Fields
+
+Every order must contain:
+
+* Order ID
+* Restaurant Name
+* Item Count
+* Delivery Distance
+
+No field can be left empty.
+
+### Why?
+
+Incomplete orders would make delivery assignment unreliable and could break business logic.
+
+---
+
+## Unique Order IDs
+
+Duplicate Order IDs are not allowed.
+
+### Why?
+
+Each order must be uniquely identifiable.
+
+Without uniqueness:
+
+```text
+Order O1
+Order O1
+```
+
+The system would not know which order should be updated.
+
+To solve this, duplicate checking is performed before inserting a new order.
+
+---
+
+## Item Count Validation
+
+Item count must be greater than 0.
+
+Invalid:
+
+```text
+0
+-1
+```
+
+Valid:
+
+```text
+1
+2
+10
+```
+
+### Why?
+
+An order cannot contain zero or negative items.
+
+---
+
+## Distance Validation
+
+Delivery distance cannot be negative.
+
+Invalid:
+
+```text
+-5
+```
+
+Valid:
+
+```text
+0
+2
+10
+```
+
+### Why?
+
+Negative distances are not meaningful in a delivery system.
+
+---
+
+# Application Architecture
+
+The application follows a component-based architecture.
 
 ```text
 App
@@ -63,13 +163,64 @@ App
 └── OutputPanel
 ```
 
-The `App` component acts as the central controller and manages application state.
+---
+
+## App Component
+
+Acts as the central controller.
+
+Responsible for:
+
+* Managing state
+* Delivery assignment logic
+* Filtering logic
+* Activity log management
+* Browser storage integration
 
 ---
 
-## Data Model
+## AddOrderForm Component
 
-Each order contains the following fields:
+Responsible for:
+
+* Capturing user input
+* Validating orders
+* Creating new orders
+
+---
+
+## FilterPanel Component
+
+Responsible for:
+
+* Status filtering
+* Distance filtering
+
+---
+
+## OrderTable Component
+
+Responsible for:
+
+* Displaying orders
+* Showing order status
+* Providing actions such as Mark Paid
+
+---
+
+## OutputPanel Component
+
+Responsible for:
+
+* Displaying activity history
+* Showing assignment events
+* Showing payment events
+
+---
+
+# Data Model
+
+Each order is represented as:
 
 ```javascript
 {
@@ -82,145 +233,94 @@ Each order contains the following fields:
 }
 ```
 
-### Field Explanation
+---
 
-| Field            | Purpose                                                   |
-| ---------------- | --------------------------------------------------------- |
-| orderId          | Unique order identifier                                   |
-| restaurantName   | Restaurant name                                           |
-| itemCount        | Number of items ordered                                   |
-| isPaid           | Indicates payment completion                              |
-| isAssigned       | Indicates whether the order is currently out for delivery |
-| deliveryDistance | Distance from delivery location                           |
+## Field Explanation
+
+| Field            | Purpose                    |
+| ---------------- | -------------------------- |
+| orderId          | Unique order identifier    |
+| restaurantName   | Restaurant name            |
+| itemCount        | Number of ordered items    |
+| isPaid           | Payment status             |
+| isAssigned       | Delivery assignment status |
+| deliveryDistance | Distance of delivery       |
 
 ---
 
-# Features
+# Order Lifecycle
 
-## 1. Add Order Panel
+Initially, the assignment only required tracking paid and unpaid orders.
 
-The Add Order panel allows users to create new orders.
+However, in a real delivery workflow an order typically progresses through multiple stages.
 
-### Fields
+To represent this more accurately, an additional field called `isAssigned` was introduced.
 
-* Order ID
-* Restaurant Name
-* Item Count
-* Distance
-* Paid Status
-
-### Validation
-
-The following validations are implemented:
-
-* All fields are required
-* Item count must be greater than zero
-* Distance cannot be negative
-* Duplicate Order IDs are not allowed
-* Empty or whitespace-only values are rejected
-
-### Why Validation Was Added
-
-Validation ensures data consistency and prevents invalid orders from entering the system.
-
----
-
-## 2. Orders Table
-
-The Orders Table displays all orders currently stored in the system.
-
-### Information Displayed
-
-* Order ID
-* Restaurant Name
-* Item Count
-* Current Status
-* Delivery Distance
-* Available Actions
-
-### Status Types
-
-#### Pending
-
-Order has not yet been assigned.
+This allows an order to move through the following lifecycle:
 
 ```text
-isPaid = false
-isAssigned = false
-```
-
-#### Out For Delivery
-
-Order has been assigned to a delivery agent.
-
-```text
-isPaid = false
-isAssigned = true
-```
-
-#### Paid
-
-Order has been successfully delivered and payment has been completed.
-
-```text
-isPaid = true
+Pending
+    ↓
+Out For Delivery
+    ↓
+Paid
 ```
 
 ---
 
-## 3. Filter Panel
+## Pending
 
-The Filter Panel allows users to narrow down the visible orders.
+Order created but not assigned.
 
-### Available Filters
-
-#### Status Filter
-
-* All
-* Pending
-* Out For Delivery
-* Paid
-
-#### Distance Filter
-
-Users can specify a maximum distance.
-
-Only orders within that distance are displayed.
-
-### Filtering Logic
-
-An order must satisfy:
-
-1. Selected status criteria
-2. Distance criteria
-
-Both conditions must be true for the order to appear.
+```javascript
+isPaid: false
+isAssigned: false
+```
 
 ---
 
-## 4. Delivery Assignment System
+## Out For Delivery
 
-This is the core feature of the application.
+Order assigned to a delivery agent.
 
-### Assignment Rules
+```javascript
+isPaid: false
+isAssigned: true
+```
 
-Only orders that satisfy all of the following conditions are eligible:
+---
+
+## Paid
+
+Delivery completed and payment received.
+
+```javascript
+isPaid: true
+```
+
+---
+
+# Delivery Assignment Algorithm
+
+This is the core functionality of the application.
+
+---
+
+## Step 1: Identify Eligible Orders
+
+Only orders satisfying all conditions are eligible:
 
 * Not paid
 * Not already assigned
 * Within maximum distance
 
-### Candidate Selection
-
-The application first creates a list of eligible orders.
-
 Example:
 
-```text
-Order O1 -> 5 KM
-Order O2 -> 2 KM
-Order O3 -> Paid
-```
+| Order | Paid | Assigned | Distance |
+| ----- | ---- | -------- | -------- |
+| O1    | No   | No       | 5 KM     |
+| O2    | No   | No       | 2 KM     |
+| O3    | Yes  | No       | 1 KM     |
 
 Eligible orders:
 
@@ -229,17 +329,21 @@ O1
 O2
 ```
 
-### Nearest Order Selection
+O3 is excluded because it has already been paid.
 
-The application uses JavaScript's `reduce()` function to find the nearest order.
+---
+
+## Step 2: Select Nearest Order
+
+Among eligible orders, the nearest order is selected.
 
 Example:
 
-```text
-O1 -> 5 KM
-O2 -> 2 KM
-O3 -> 7 KM
-```
+| Order | Distance |
+| ----- | -------- |
+| O1    | 5 KM     |
+| O2    | 2 KM     |
+| O3    | 7 KM     |
 
 Selected:
 
@@ -247,15 +351,35 @@ Selected:
 O2
 ```
 
-### Result
+because it has the smallest delivery distance.
 
-The selected order is moved from:
+This is implemented using JavaScript's `reduce()` function.
 
-```text
-Pending
+---
+
+## Step 3: Update Status
+
+After assignment:
+
+Before:
+
+```javascript
+{
+  isPaid: false,
+  isAssigned: false
+}
 ```
 
-to
+After:
+
+```javascript
+{
+  isPaid: false,
+  isAssigned: true
+}
+```
+
+The order becomes:
 
 ```text
 Out For Delivery
@@ -263,15 +387,73 @@ Out For Delivery
 
 ---
 
-## 5. Mark Paid Feature
+# Filtering Logic
 
-Once a delivery is completed, the user can click:
+The system supports filtering based on:
+
+## Status
+
+* All
+* Pending
+* Out For Delivery
+* Paid
+
+---
+
+## Distance
+
+Users can specify a maximum delivery distance.
+
+Example:
+
+```text
+Maximum Distance = 5 KM
+```
+
+Only orders with:
+
+```text
+distance <= 5
+```
+
+are displayed.
+
+---
+
+## Combined Filtering
+
+An order must satisfy:
+
+```text
+Status Filter
+AND
+Distance Filter
+```
+
+to be displayed.
+
+---
+
+# Mark Paid Feature
+
+Once delivery is completed, users can click:
 
 ```text
 Mark Paid
 ```
 
-The application updates:
+The order is updated:
+
+Before:
+
+```javascript
+{
+  isPaid: false,
+  isAssigned: true
+}
+```
+
+After:
 
 ```javascript
 {
@@ -280,7 +462,7 @@ The application updates:
 }
 ```
 
-The order status becomes:
+Status becomes:
 
 ```text
 Paid
@@ -288,39 +470,39 @@ Paid
 
 ---
 
-## 6. Activity Log Panel
+# Activity Log
 
 The Output Panel acts as an activity log.
 
-### Examples
+Examples:
 
 ```text
 Order O1 from KFC is Out For Delivery
 
-Order O2 marked as Paid
+Order O1 marked as Paid
 
 No order available
 ```
 
-### Why It Was Added
-
-Instead of showing only the latest action, the panel maintains a history of events.
-
-This improves visibility and user experience.
+Instead of displaying only the latest event, the application stores a history of actions for better visibility.
 
 ---
 
-## Local Storage Persistence
+# Browser Storage Persistence
 
-### Problem
+## Problem
 
-React state is lost after a page refresh.
+React state exists only in memory.
 
-### Solution
+Refreshing the page would normally remove all orders.
 
-Orders are automatically saved to Local Storage whenever changes occur.
+---
 
-### Save
+## Solution
+
+Browser Local Storage is used.
+
+### Saving Orders
 
 ```javascript
 localStorage.setItem(
@@ -329,69 +511,72 @@ localStorage.setItem(
 );
 ```
 
-### Load
+Whenever the orders list changes, it is automatically saved.
+
+---
+
+### Loading Orders
 
 ```javascript
 localStorage.getItem("orders");
 ```
 
-This ensures orders remain available after browser refreshes.
+Previously saved orders are loaded when the application starts.
 
 ---
 
-## Workflow
+## Benefits
 
-```text
-Create Order
-      ↓
-Pending
-      ↓
-Assign Delivery
-      ↓
-Out For Delivery
-      ↓
-Mark Paid
-      ↓
-Paid
-```
+* Orders survive browser refreshes.
+* No backend required.
+* Better user experience.
+* Demonstrates client-side persistence.
 
 ---
 
-## Design Decisions
+# Design Decisions
 
-### Why React?
+## Why React?
 
-React provides component-based architecture and efficient state management.
+React provides:
 
-### Why Local Storage?
-
-The assignment did not require a backend.
-
-Local Storage provides a lightweight persistence solution and demonstrates state persistence.
-
-### Why Separate Components?
-
-Separating UI into multiple components improves:
-
-* Readability
-* Maintainability
-* Reusability
-
-### Why Add `isAssigned`?
-
-The original model only contained Paid and Unpaid states.
-
-In real delivery systems, an order can be:
-
-* Pending
-* Out For Delivery
-* Paid
-
-Introducing `isAssigned` creates a more realistic order lifecycle.
+* Reusable components
+* Efficient rendering
+* Simple state management
 
 ---
 
-## Installation
+## Why Local Storage?
+
+The assignment did not require a backend database.
+
+Local Storage provides a lightweight persistence solution.
+
+---
+
+## Why Introduce isAssigned?
+
+The original requirement only distinguished between paid and unpaid orders.
+
+However, a realistic delivery workflow requires tracking orders that have already been assigned.
+
+Adding `isAssigned` prevents the same order from being assigned multiple times.
+
+---
+
+## Why Maintain an Activity Log?
+
+Users should be able to review previous actions.
+
+The activity log provides visibility into:
+
+* Assignments
+* Payments
+* System notifications
+
+---
+
+# Installation
 
 ```bash
 git clone <repository-url>
@@ -400,7 +585,7 @@ npm install
 npm run dev
 ```
 
-Application will be available at:
+Application runs at:
 
 ```text
 http://localhost:5173
@@ -408,8 +593,37 @@ http://localhost:5173
 
 ---
 
-## Build for Production
+# Build
 
 ```bash
 npm run build
+```
+
+Preview production build:
+
+```bash
+npm run preview
+```
+
+---
+
+# Future Improvements
+
+Possible future enhancements include:
+
+* Backend API integration
+* Database persistence
+* User authentication
+* Delivery agent management
+* Search functionality
+* Real-time updates
+* Order editing and deletion
+* Analytics dashboard
+
+---
+
+# Author
+
+**Prakhar Pandey**
+
 ```
