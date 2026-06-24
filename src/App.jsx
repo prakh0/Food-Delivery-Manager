@@ -269,13 +269,15 @@ const exportOrders = () => {
         setMaxDistance={setMaxDistance}
       />
 
-      <button onClick={assignDelivery}>
-        Assign Delivery
-      </button>
-
-      <button onClick={exportOrders}>
-      Export Orders
-      </button>
+      <div className="buttons">
+        <button onClick={assignDelivery}>
+          Assign Delivery
+        </button>
+  
+        <button onClick={exportOrders}>
+        Export Orders
+        </button>
+      </div>
  
       <OrderTable
         orders={filteredOrders}

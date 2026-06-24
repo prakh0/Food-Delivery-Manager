@@ -3,8 +3,6 @@ export default function OutputPanel({
 }) {
   return (
     <div className="card">
-      <h2>Output</h2>
-
       {messages.length === 0 ? (
         <p>No activity yet</p>
       ) : (

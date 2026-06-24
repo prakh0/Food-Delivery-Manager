@@ -37,15 +37,6 @@ select {
   padding: 10px;
 }
 
-button {
-  padding: 10px 15px;
-  cursor: pointer;
-  border: none;
-  background: #2563eb;
-  color: white;
-  border-radius: 6px;
-}
-
 table {
   width: 100%;
   min-width: 700px;
@@ -122,4 +113,37 @@ th {
   border-radius: 8px;
   text-align: center;
   font-weight: bold;
+}
+
+button {
+  padding: 10px 15px;
+  cursor: pointer;
+  border: none;
+  background: #2563eb;
+  color: white;
+  border-radius: 6px;
+  transition: 0.2s ease;
+}
+
+button:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.buttons {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+}
+
+.checkbox-label input {
+  width: auto;
 }

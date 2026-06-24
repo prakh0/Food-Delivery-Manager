@@ -98,8 +98,7 @@ export default function AddOrderForm({
         }
       />
 
-      <label>
-        Paid
+      <label className="checkbox-label">
         <input
           type="checkbox"
           checked={form.isPaid}
@@ -110,6 +109,7 @@ export default function AddOrderForm({
             })
           }
         />
+        Paid
       </label>
 
       <button type="submit">
