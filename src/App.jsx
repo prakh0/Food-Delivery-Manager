@@ -11,8 +11,18 @@ function App() {
 });
   const [statusFilter, setStatusFilter] = useState("all");
   const [maxDistance, setMaxDistance] = useState(20);
-  const [messages, setMessages] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [messages, setMessages] =
+  useState(() => {
+    const saved =
+      localStorage.getItem(
+        "messages"
+      );
+
+    return saved
+      ? JSON.parse(saved)
+      : [];
+  });
 
   useEffect(() => {
     localStorage.setItem(
@@ -20,6 +30,13 @@ function App() {
       JSON.stringify(orders)
     );
   }, [orders]);
+
+  useEffect(() => {
+  localStorage.setItem(
+    "messages",
+    JSON.stringify(messages)
+  );
+}, [messages]);
 
   const addOrder = (order) => {
   if (
@@ -50,9 +67,48 @@ const markAsPaid = (orderId) => {
   );
 
   setMessages((prev) => [
-  `Order ${orderId} marked as Paid`,
+  `[${new Date().toLocaleTimeString()}] Order ${orderId} marked as Paid`,
   ...prev,
 ]);
+};
+
+const clearLogs = () => {
+  if (
+    window.confirm(
+      "Clear all activity logs?"
+    )
+  ) {
+    setMessages([]);
+    localStorage.removeItem(
+      "messages"
+    );
+  }
+};
+const exportOrders = () => {
+  const blob = new Blob(
+    [JSON.stringify(orders, null, 2)],
+    {
+      type: "application/json",
+    }
+  );
+
+  const url =
+    URL.createObjectURL(blob);
+
+  const a =
+    document.createElement("a");
+
+  a.href = url;
+  a.download = "orders.json";
+
+  a.click();
+
+  URL.revokeObjectURL(url);
+
+  setMessages((prev) => [
+    `[${new Date().toLocaleTimeString()}] Orders exported`,
+    ...prev,
+  ]);
 };
 
   const totalOrders = orders.length;
@@ -108,7 +164,7 @@ const markAsPaid = (orderId) => {
 
   if (!candidates.length) {
     setMessages((prev) => [
-      "No order available",
+      `[${new Date().toLocaleTimeString()}] No order available`,
       ...prev,
     ]);
     return;
@@ -121,7 +177,7 @@ const markAsPaid = (orderId) => {
   );
   
   setMessages((prev) => [
-  `Order ${nearest.orderId} from ${nearest.restaurantName} is Out For Delivery`,
+  `[${new Date().toLocaleTimeString()}] Order ${nearest.orderId} from ${nearest.restaurantName} is Out For Delivery`,
   ...prev,
 ]);
 
@@ -170,10 +226,18 @@ const markAsPaid = (orderId) => {
         Assign Delivery
       </button>
 
+      <button onClick={exportOrders}>
+      Export Orders
+      </button>
+
       <OrderTable 
       orders={filteredOrders}
       markAsPaid={markAsPaid} 
       />
+
+      <button onClick={clearLogs}>
+        Clear Activity Log
+      </button>
 
       <OutputPanel messages={messages} />
     </div>
