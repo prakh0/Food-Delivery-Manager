@@ -4,7 +4,6 @@ export default function AddOrderForm({
   onAddOrder,
 }) {
   const [form, setForm] = useState({
-    orderId: "",
     restaurantName: "",
     itemCount: "",
     isPaid: false,
@@ -16,7 +15,6 @@ export default function AddOrderForm({
   e.preventDefault();
 
   if (
-    !form.orderId.trim() ||
     !form.restaurantName.trim() ||
     !form.itemCount ||
     !form.deliveryDistance
@@ -34,6 +32,10 @@ export default function AddOrderForm({
     alert("Distance cannot be negative");
     return;
   }
+  if (Number(form.deliveryDistance) > 25) {
+  alert("Maximum delivery distance is 25 km");
+  return;
+}
 
   onAddOrder({
     ...form,
@@ -42,7 +44,6 @@ export default function AddOrderForm({
   });
 
   setForm({
-    orderId: "",
     restaurantName: "",
     itemCount: "",
     isPaid: false,
@@ -53,19 +54,6 @@ export default function AddOrderForm({
 
   return (
     <form onSubmit={handleSubmit}>
-      <input
-        type="text"
-        required
-        placeholder="Order ID"
-        value={form.orderId}
-        onChange={(e) =>
-          setForm({
-            ...form,
-            orderId: e.target.value,
-          })
-        }
-      />
-
       <input
         type="text"
         required

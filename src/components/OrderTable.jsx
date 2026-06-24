@@ -1,6 +1,7 @@
 export default function OrderTable({
   orders,
   markAsPaid,
+  deleteOrder,
 }) {
   return (
     <div className="card">
@@ -45,17 +46,25 @@ export default function OrderTable({
               <td>
                 {order.deliveryDistance} km
               </td>
-              <td>
+              <td className="actions">
                 {order.isAssigned &&
-                  !order.isPaid && (
-                    <button
-                      onClick={() =>
-                        markAsPaid(order.orderId)
-                      }
+                !order.isPaid && (
+                  <button
+                    onClick={() =>
+                      markAsPaid(order.orderId)
+                    }
                     >
-                      Mark Paid
+                    Mark Paid
                     </button>
-                  )}
+                    )}
+                
+                  <button
+                    onClick={() =>
+                      deleteOrder(order.orderId)
+                    }
+                  >
+                    Delete
+                  </button>
                 </td>
             </tr>
           ))}

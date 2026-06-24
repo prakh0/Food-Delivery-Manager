@@ -28,10 +28,17 @@ export default function FilterPanel({
           <label>Max Distance (KM)</label>
           <input
             type="number"
+            min ="0"
+            max ="25"
             value={maxDistance}
-            onChange={(e) =>
-              setMaxDistance(Number(e.target.value))
+            onChange={(e) => {
+              const value = Number(e.target.value);
+               if (value > 25) {
+                alert("Maximum distance is 25 km");
+                return;
             }
+                setMaxDistance(value)
+            }}
           />
         </div>
       </div>

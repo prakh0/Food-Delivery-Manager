@@ -38,19 +38,30 @@ function App() {
   );
 }, [messages]);
 
-  const addOrder = (order) => {
-  if (
-    orders.some(
-      (o) =>
-        o.orderId.trim().toLowerCase() ===
-        order.orderId.trim().toLowerCase()
-    )
-  ) {
-    alert("Order ID already exists");
-    return;
-  }
+const addOrder = (order) => {
+  let newId;
 
-  setOrders((prev) => [...prev, order]);
+  do {
+    newId =
+      "#" +
+      Math.floor(
+        10000 + Math.random() * 90000
+      );
+  } while (
+    orders.some(
+      (o) => o.orderId === newId
+    )
+  );
+
+  const newOrder = {
+    ...order,
+    orderId: newId,
+  };
+
+  setOrders((prev) => [
+    ...prev,
+    newOrder,
+  ]);
 };
 
 const markAsPaid = (orderId) => {
@@ -70,6 +81,26 @@ const markAsPaid = (orderId) => {
   `[${new Date().toLocaleTimeString()}] Order ${orderId} marked as Paid`,
   ...prev,
 ]);
+};
+
+const deleteOrder = (orderId) => {
+  if (
+    window.confirm(
+      `Delete Order ${orderId}?`
+    )
+  ) {
+    setOrders((prev) =>
+      prev.filter(
+        (order) =>
+          order.orderId !== orderId
+      )
+    );
+
+    setMessages((prev) => [
+      `[${new Date().toLocaleTimeString()}] Order ${orderId} deleted`,
+      ...prev,
+    ]);
+  }
 };
 
 const clearLogs = () => {
@@ -196,11 +227,27 @@ const exportOrders = () => {
       <div className="card stats">
           <h2>Dashboard</h2>
         
-          <p>Total Orders: {totalOrders}</p>
-          <p>Pending: {pendingOrders}</p>
-          <p>Out For Delivery: {assignedOrders}</p>
-          <p>Paid: {paidOrders}</p>
+          <div className="stats-grid">
+            <div className="stats-card">
+              Total Orders
+            <h3>{totalOrders}</h3>
+          </div>
+          <div className="stats-card">
+            Pending
+          <h3>{pendingOrders}</h3>
+          </div>
+
+          <div className="stats-card">
+            Out For Delivery
+          <h3>{assignedOrders}</h3>
+          </div>
+          
+          <div className="stats-card">
+            Paid
+          <h3>{paidOrders}</h3>
+          </div>
         </div>
+      </div>
 
       <AddOrderForm onAddOrder={addOrder} />
 
@@ -229,12 +276,12 @@ const exportOrders = () => {
       <button onClick={exportOrders}>
       Export Orders
       </button>
-
-      <OrderTable 
-      orders={filteredOrders}
-      markAsPaid={markAsPaid} 
+ 
+      <OrderTable
+        orders={filteredOrders}
+        markAsPaid={markAsPaid}
+        deleteOrder={deleteOrder}
       />
-
       <button onClick={clearLogs}>
         Clear Activity Log
       </button>
