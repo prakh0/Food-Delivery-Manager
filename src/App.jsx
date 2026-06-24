@@ -286,7 +286,7 @@ const downloadJson   = () => {
         </button>
   
         <button onClick={downloadJson}>
-          Download Json   
+          Download JSON   
         </button>
       </div>
  
