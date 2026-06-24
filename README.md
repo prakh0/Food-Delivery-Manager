@@ -7,13 +7,6 @@ This project was developed as part of the **Online Food Delivery Order Manager A
 ## Live Demo
 
 **Deployment URL:** https://food-delivery-manager.vercel.app/
-
-## GitHub Repository
-
-Replace with your repository URL:
-
-`https://github.com/your-username/food-delivery-manager`
-
 ---
 
 # Objective
