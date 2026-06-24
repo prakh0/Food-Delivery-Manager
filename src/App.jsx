@@ -10,7 +10,7 @@ function App() {
     return saved ? JSON.parse(saved) : [];
 });
   const [statusFilter, setStatusFilter] = useState("all");
-  const [maxDistance, setMaxDistance] = useState(20);
+  const [maxDistance, setMaxDistance] = useState(25);
   const [searchTerm, setSearchTerm] = useState("");
   const [messages, setMessages] =
   useState(() => {

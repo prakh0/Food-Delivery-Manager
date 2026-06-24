@@ -147,3 +147,11 @@ button:hover {
 .checkbox-label input {
   width: auto;
 }
+
+.status-select {
+  margin-left: 5px;
+}
+
+.distance-input {
+  margin-left: 5px;
+}

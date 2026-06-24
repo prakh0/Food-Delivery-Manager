@@ -12,22 +12,25 @@ export default function FilterPanel({
         <div>
           <label>Status</label>
           <select
-            value={statusFilter}
-            onChange={(e) =>
+            className="status-select"
+            style ={{ width: "80px" }}
+            value ={statusFilter}
+            onChange ={(e) =>
               setStatusFilter(e.target.value)
             }
           >
-            <option value="all">All</option>
-            <option value="pending">Pending</option>
-            <option value="assigned">Out For Delivery</option>
-            <option value="paid">Paid</option>
+            <option value ="all">All</option>
+            <option value ="pending">Pending</option>
+            <option value ="assigned">Out For Delivery</option>
+            <option value ="paid">Paid</option>
           </select>
         </div>
 
         <div>
           <label>Max Distance (KM)</label>
           <input
-            type="number"
+            className = "distance-input"
+            type ="number"
             min ="0"
             max ="25"
             value={maxDistance}
