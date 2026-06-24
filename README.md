@@ -213,6 +213,45 @@ Benefits:
 * Faster user experience.
 
 ---
+## Reset Application
+
+The application includes a **Reset Application** feature that allows users to completely clear all stored application data.
+
+### What gets removed
+
+* All orders
+* Activity logs
+* Saved browser Local Storage data
+
+### Why it was added
+
+Since the application uses browser Local Storage for persistence, previously saved orders remain available even after refreshing the page or deploying a newer version of the application.
+
+The Reset Application feature provides a quick way to:
+
+* Start with a clean state
+* Remove old test data
+* Clear stale data from previous versions
+* Demonstrate the application from scratch during reviews
+
+### User Experience
+
+When the button is clicked, a confirmation dialog is displayed:
+
+```text
+This will delete all orders and activity logs. Continue?
+```
+
+If confirmed, the application:
+
+1. Clears Local Storage
+2. Removes all saved orders
+3. Removes all activity logs
+4. Reloads the application
+
+This ensures the system returns to its initial empty state.
+
+---
 
 ## Responsive Design
 
