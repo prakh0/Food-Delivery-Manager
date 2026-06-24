@@ -12,6 +12,7 @@ function App() {
   const [statusFilter, setStatusFilter] = useState("all");
   const [maxDistance, setMaxDistance] = useState(20);
   const [messages, setMessages] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     localStorage.setItem(
@@ -54,6 +55,17 @@ const markAsPaid = (orderId) => {
 ]);
 };
 
+  const totalOrders = orders.length;
+
+  const pendingOrders = orders.filter(
+  (o) => !o.isAssigned && !o.isPaid).length;
+  
+  const assignedOrders = orders.filter(
+  (o) => o.isAssigned && !o.isPaid).length;
+
+  const paidOrders = orders.filter(
+    (o) => o.isPaid).length;
+
   const filteredOrders = orders.filter((order) => {
   let statusMatch = true;
 
@@ -76,7 +88,14 @@ const markAsPaid = (orderId) => {
   const distanceMatch =
     order.deliveryDistance <= maxDistance;
 
-  return statusMatch && distanceMatch;
+  const searchMatch =
+  order.orderId
+    .toLowerCase()
+    .includes(
+      searchTerm.toLowerCase()
+    );
+
+  return (statusMatch && distanceMatch && searchMatch);
 });
 
   const assignDelivery = () => {
@@ -88,7 +107,10 @@ const markAsPaid = (orderId) => {
   );
 
   if (!candidates.length) {
-    setMessage("No order available");
+    setMessages((prev) => [
+      "No order available",
+      ...prev,
+    ]);
     return;
   }
 
@@ -115,7 +137,27 @@ const markAsPaid = (orderId) => {
     <div className="container">
       <h1>Food Delivery Manager</h1>
 
+      <div className="card stats">
+          <h2>Dashboard</h2>
+        
+          <p>Total Orders: {totalOrders}</p>
+          <p>Pending: {pendingOrders}</p>
+          <p>Out For Delivery: {assignedOrders}</p>
+          <p>Paid: {paidOrders}</p>
+        </div>
+
       <AddOrderForm onAddOrder={addOrder} />
+
+      <div className="card">
+        <input
+          type="text"
+          placeholder="Search by Order ID"
+          value={searchTerm}
+          onChange={(e) =>
+            setSearchTerm(e.target.value)
+          }
+        />
+      </div>
 
       <FilterPanel
         statusFilter={statusFilter}

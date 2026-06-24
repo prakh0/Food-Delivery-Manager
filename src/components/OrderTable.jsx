@@ -6,6 +6,7 @@ export default function OrderTable({
     <div className="card">
       <h2>Orders</h2>
 
+      <div className="table-container">
       <table>
         <thead>
           <tr>
@@ -14,7 +15,7 @@ export default function OrderTable({
             <th>Items</th>
             <th>Status</th>
             <th>Distance</th>
-            <th>Action</th>
+            <th>Actions</th>
           </tr>
         </thead>
 
@@ -22,47 +23,49 @@ export default function OrderTable({
           {orders.map((order) => (
             <tr key={order.orderId}>
               <td>{order.orderId}</td>
-
-              <td>
-                {order.restaurantName}
-              </td>
-
+              <td>{order.restaurantName}</td>
               <td>{order.itemCount}</td>
-
               <td>
-                {order.isPaid
-                  ? "Paid"
-                  : order.isAssigned
-                  ? "Out For Delivery"
-                  : "Pending"}
-              </td>
-
+                  <span
+                    className={
+                      order.isPaid
+                        ? "status paid"
+                        : order.isAssigned
+                        ? "status assigned"
+                        : "status pending"
+                    }
+                  >
+                    {order.isPaid
+                      ? "Paid"
+                      : order.isAssigned
+                      ? "Out For Delivery"
+                      : "Pending"}
+                  </span>
+                </td>
               <td>
                 {order.deliveryDistance} km
               </td>
-
               <td>
                 {order.isAssigned &&
                   !order.isPaid && (
                     <button
                       onClick={() =>
-                        markAsPaid(
-                          order.orderId
-                        )
+                        markAsPaid(order.orderId)
                       }
                     >
                       Mark Paid
                     </button>
                   )}
-              </td>
+                </td>
             </tr>
           ))}
         </tbody>
       </table>
+      </div>
 
       {orders.length === 0 && (
         <p>No orders found</p>
       )}
-    </div>
+      </div>
   );
 }

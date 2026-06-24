@@ -24,6 +24,7 @@ h1 {
   padding: 20px;
   margin-bottom: 20px;
   border-radius: 10px;
+  overflow: hidden;
 }
 
 form {
@@ -47,6 +48,7 @@ button {
 
 table {
   width: 100%;
+  min-width: 700px;
   border-collapse: collapse;
 }
 
@@ -58,4 +60,42 @@ td {
 
 th {
   background: #f8fafc;
+}
+
+.status {
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  display: inline-block;
+}
+
+.pending {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+.assigned {
+  background-color: #dbeafe;
+  color: #1d4ed8;
+}
+
+.paid {
+  background-color: #dcfce7;
+  color: #166534;
+}
+
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 15px;
+  }
+
+  table {
+    min-width: 650px;
+  }
 }
